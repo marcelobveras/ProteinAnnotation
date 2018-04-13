@@ -1,15 +1,16 @@
 import numpy as np
 import pandas as pd
+import scipy.sparse as sps
 
-file = open("C:\\Users\\marce\\Desktop\\uniprot\\mammals.dat")x
+file = open("C:\\Users\\marce\\Desktop\\uniprot\\mammals.dat")
 
 #Primeira Leitura
 #Criação dos conjuntos de palavras
 
 Codes = {'OC', 'DR', 'ID', 'KW'}
 OCset = set()
-DRset = set()
 KWset = set()
+DREmblset = set()
 IDset = set()
 
 for row in file:
@@ -29,18 +30,23 @@ for row in file:
             for word in words:
                 KWset.add(word.lstrip())
         if(line[0] == "DR"):
+            if(words[0] == "EMBL")
             DRstring = words[0].lstrip()+':'+words[1].lstrip()
-            DRset.add(DRstring)
+            DREMBLset.add(DRstring)
 
 #Incializando matrizes booleanas e dataframes correspondentes
-OCMatrix = np.zeros((len(IDset),len(OCset)), dtype=int)
-DRMatrix = np.zeros((len(IDset),len(DRset)), dtype=int)
-KWMatrix = np.zeros((len(IDset),len(KWset)), dtype=int)
+OCMatrix = np.zeros((len(IDset),len(OCset)), dtype='uint8')
+DREMBLMatrix = np.zeros((len(IDset),len(DREMBLset)), dtype='uint8')
+KWMatrix = np.zeros((len(IDset),len(KWset)), dtype='uint8')
+
 
 OCDataFrame = pd.DataFrame(data=OCMatrix, index=IDset, columns=OCset)
-DRDataFrame = pd.DataFrame(data=DRMatrix, index=IDset, columns=DRset)
+DREMBLDataFrame = pd.DataFrame(data=DREMBLMatrix, index=IDset, columns=DRset)
 KWDataFrame = pd.DataFrame(data=KWMatrix, index=IDset, columns=KWset)
 
+# OCDataFrame.to_sparse()
+# DRDataFrame.to_sparse()
+# KWDataFrame.to_sparse()
 
 #Segunda leitura do arquivo (Criação do dataset)
 file.seek(0)
@@ -64,6 +70,7 @@ for row in file:
         if(line[0] == "DR"):
             DRstring = words[0].lstrip()+':'+words[1].lstrip()
             DRDataFrame[DRstring][idname] = 1
-DRDataFrame.to_csv("DRdata", sep=';')
-OCDataFrame.to_csv("OCData", sep=';')
-KWDataFrame.to_csv("KWData", sep=';')
+# DRDataFrame.to_csv("DRdata.dat", sep=';')
+# OCDataFrame.to_csv("OCData.dat", sep=';')
+# KWDataFrame.to_csv("KWData.dat", sep=';')
+# DRDataFrame.info(memory_usage='deep')
