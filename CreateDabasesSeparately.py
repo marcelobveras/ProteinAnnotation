@@ -2,6 +2,10 @@ import numpy as np
 import pandas as pd
 from collections import Counter
 
+data = pd.read_csv("KWData.dat", sep=';')
+data.sum(axis=0)
+data.sum(axis=1)
+
 trsld = 0.0001
 
 file = open("C:\\Users\\marce\\Desktop\\uniprot\\mammals.dat")
