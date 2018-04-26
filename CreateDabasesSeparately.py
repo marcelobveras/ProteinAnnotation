@@ -26,6 +26,7 @@ for row in file:
 #OC Dataset
 file.seek(0)
 OCset = set()
+OCdict = {}
 
 for row in file:
     if(row[0:2] in ('OC')):

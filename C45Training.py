@@ -14,6 +14,8 @@ X_train, X_test, y_train, y_test = ms.train_test_split(dataX.values[:,1:].astype
 
 y_train1 = y_train[:,0];
 
+
+
 somaTrue = sum(X_test)
 somaFalse = sum(~X_test)
 probTrue = somaTrue/n
