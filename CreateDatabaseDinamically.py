@@ -2,11 +2,9 @@ import numpy as np
 import pandas as pd
 from collections import Counter
 
-OCtresh = 0.05
-DRtresh = 0.001
 Codes = {'OC', 'DR', 'KW'}
 
-file = open("C:\\Users\\marce\\Desktop\\uniprot\\mammals.dat")
+file = open("C:\\Users\\marce\\Desktop\\uniprot\\uniprot_sprot.dat")
 
 #ID Set
 IDset = set()
@@ -96,8 +94,6 @@ for row in file:
 #DR Embl Dataset
 file.seek(0)
 DRdict = {}
-DRset = set()
-OCset = set()
 OCdict = {}
 
 for row in file:
@@ -124,22 +120,26 @@ for row in file:
 
 nTotDR = len(DRdict)
 nTotOC = len(OCdict)
+DRset = set()
+OCset = set()
+OCtresh = 0.1
+DRtresh = 0.0003
 
 for OCkey in OCdict:
-    if (OCdict[OCkey]/nTotOC >= OCtresh):
+    if ((OCdict[OCkey]/nTotOC >= OCtresh) and (1-(OCdict[OCkey]/nTotOC) <= 1-OCtresh)):
         OCset.add(OCkey)
-# len(OCset)
+len(OCset)
 for DRkey in DRdict:
-    if (DRdict[DRkey]/nTotDR >= DRtresh):
+    if ((DRdict[DRkey]/nTotDR >= DRtresh) and (1-(DRdict[DRkey]/nTotDR) <= 1-DRtresh)):
         DRset.add(DRkey)
-# len(DRset)
+len(DRset)
 len(OCset.union(DRset))
 featMatrix = np.zeros((len(IDset),len(DRset)+len(OCset)), dtype='uint8')
 featDataFrame = pd.DataFrame(data=featMatrix, index=IDset, columns=OCset.union(DRset))
-
+len(IDset)*(len(DRset)+len(OCset))
 file.seek(0)
 for row in file:
-    if(row[0:2] in ('ID','DR')):
+    if(row[0:2] in ('ID','DR','OC')):
         line = row.split("   ")
         line[-1] = line[-1].strip()
         line = [empEle for empEle in line if empEle]
@@ -155,6 +155,7 @@ for row in file:
         if(line[0] == "OC"):
             for word in words:
                 ocname = 'OC:'+word.lstrip()
-                featDataFrame[ocname][idname] = 1
-featDataFrame.sum()
-DRDataFrame.to_csv("Data.dat", sep=';')
+                if (ocname in OCset):
+                    featDataFrame[ocname][idname] = 1
+featDataFrame.sum().sum()/(len(IDset)*(len(DRset)+len(OCset)))
+featDataFrame.to_csv("Data.dat", sep=';')
