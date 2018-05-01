@@ -42,7 +42,7 @@ X_train, X_test, y_train, y_test = ms.train_test_split(dataX.values[:,1:].astype
 #     idxMaxEnt = Entropy.argmax()
 #
 
-clf = tree.DecisionTreeClassifier(max_depth=4)
+clf = tree.DecisionTreeClassifier()
 clf = clf.fit(X_train,y_train)
 y_hat = clf.predict(X_test)
 y_hat.shape[0]
@@ -73,17 +73,21 @@ conf[:] = np.nan
 for j in range(y_hat.shape[1]):
     if (~np.isnan(p[j])):
         conf[j] = (p[j] + ((z*z)/(2*n[j])) - z * (np.sqrt( (p[j]/n[j]) - ((p[j]*p[j])/n[j]) + ((z*z)/(4*n[j]*n[j]))  )))/ (1+((z*z)/(n[j])))
-p[np.where(conf < 0.5)] = np.nan
-p[np.where(~np.isnan(p))]
+
+precisionOld = p[:]
+
+p[np.where(conf < 0.3)] = np.nan
+p[np.where(~np.isnan(p))].size
 conf[np.where(~np.isnan(p))]
 # dataY[dataY.columns[1:][np.where(~np.isnan(p))]]
 # dataY[dataY.columns[1:][~np.isnan(p)]]
-dataY.columns[1:][np.where(~np.isnan(p))[0][0]]
+dataY.columns[0:][np.where(~np.isnan(p))]
 y_test[:,np.where(p==1)] == y_hat[:,np.where(p==1)]
 
 
 
-sum(TP)
+TP.argsort()[::-1]
+conf[459]
 sum(FP)
 sum(TN)
 sum(FN)

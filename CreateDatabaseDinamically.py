@@ -1,10 +1,14 @@
 import numpy as np
 import pandas as pd
 from collections import Counter
+import os
+
+def clear():
+    os.system( 'cls' )
 
 Codes = {'OC', 'DR', 'KW'}
 
-file = open("C:\\Users\\marce\\Desktop\\uniprot\\uniprot_sprot.dat")
+file = open("C:\\Users\\marce\\Desktop\\uniprot\\uniprot_sprot_bacteria.dat")
 
 #ID Set
 IDset = set()
@@ -122,8 +126,8 @@ nTotDR = len(DRdict)
 nTotOC = len(OCdict)
 DRset = set()
 OCset = set()
-OCtresh = 0.1
-DRtresh = 0.0003
+OCtresh = 0.3
+DRtresh = 0.01
 
 for OCkey in OCdict:
     if ((OCdict[OCkey]/nTotOC >= OCtresh) and (1-(OCdict[OCkey]/nTotOC) <= 1-OCtresh)):
@@ -138,7 +142,12 @@ featMatrix = np.zeros((len(IDset),len(DRset)+len(OCset)), dtype='uint8')
 featDataFrame = pd.DataFrame(data=featMatrix, index=IDset, columns=OCset.union(DRset))
 len(IDset)*(len(DRset)+len(OCset))
 file.seek(0)
+teste = 0
 for row in file:
+    teste = teste+1
+    if(teste%1000000 == 0):
+        clear()
+        print(teste)
     if(row[0:2] in ('ID','DR','OC')):
         line = row.split("   ")
         line[-1] = line[-1].strip()
